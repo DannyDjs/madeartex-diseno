@@ -1,0 +1,231 @@
+---
+import Logo from './Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { siteConfig } from '../../config/site';
+import { mainNav, quoteHref } from '../../config/navigation';
+import { categories } from '../../data/categories';
+import { buildWhatsAppLink } from '../../lib/whatsapp';
+
+const { contact, social, location } = siteConfig;
+const whatsappHref = buildWhatsAppLink(siteConfig.whatsappMessages.general);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href="/" aria-label="Madeartex Diseño, ir al inicio">
+        <Logo height={72} loading="lazy" />
+      </a>
+      <p class="site-footer__slogan">{siteConfig.slogan}.</p>
+      <p class="site-footer__location">
+        <Icon name="map-pin" size={16} />
+        {location.city}, {location.region}, {location.country}
+      </p>
+    </div>
+
+    <nav aria-labelledby="footer-nav-title">
+      <h2 class="site-footer__title" id="footer-nav-title">Navegación</h2>
+      <ul class="site-footer__list">
+        {mainNav.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+        <li><a href={quoteHref}>Solicitar cotización</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="footer-catalog-title">
+      <h2 class="site-footer__title" id="footer-catalog-title">Catálogo</h2>
+      <ul class="site-footer__list">
+        {categories.map((category) => <li><a href={`/catalogo/${category.slug}/`}>{category.name}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="site-footer__title">Contacto</h2>
+      <ul class="site-footer__list site-footer__contact">
+        {
+          whatsappHref ? (
+            <li>
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                <Icon name="whatsapp" size={16} /> WhatsApp
+              </a>
+            </li>
+          ) : (
+            <li class="is-pending">
+              <Icon name="whatsapp" size={16} /> WhatsApp: pendiente de configuración
+            </li>
+          )
+        }
+        {contact.phone && <li><a href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}><Icon name="phone" size={16} /> {contact.phone}</a></li>}
+        {contact.email && <li><a href={`mailto:${contact.email}`}><Icon name="mail" size={16} /> {contact.email}</a></li>}
+        {contact.address && <li><Icon name="map-pin" size={16} /> {contact.address}</li>}
+        {contact.hours && <li><Icon name="clock" size={16} /> {contact.hours}</li>}
+      </ul>
+      {
+        social.length > 0 && (
+          <ul class="site-footer__social">
+            {social.map((item) => (
+              <li>
+                <a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={item.label}>
+                  <Icon name={item.icon} size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <div class="container site-footer__bottom-inner">
+      <p>© <span data-current-year>{year}</span> {siteConfig.name}. Todos los derechos reservados.</p>
+      <ul>
+        <li><a href="/privacidad/">Aviso de privacidad</a></li>
+        <li><a href="/creditos/">Créditos de imágenes</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('[data-current-year]').forEach((node) => {
+    node.textContent = String(new Date().getFullYear());
+  });
+</script>
+
+<style>
+  .site-footer {
+    background: var(--cream);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .site-footer__brand :global(.logo) {
+    height: 64px;
+    width: auto;
+  }
+
+  .site-footer__slogan {
+    margin-top: var(--space-4);
+    max-width: 30ch;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--charcoal-800);
+  }
+
+  .site-footer__location {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__title {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .site-footer__list {
+    list-style: none;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .site-footer__list a,
+  .site-footer__list li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--charcoal-700);
+    text-decoration: none;
+  }
+
+  .site-footer__list a {
+    padding-block: 2px;
+  }
+
+  .site-footer__list a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .site-footer__contact .is-pending {
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__social {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  .site-footer__social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    color: var(--charcoal-800);
+  }
+
+  .site-footer__social a:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .site-footer__bottom {
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .site-footer__bottom-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+  }
+
+  .site-footer__bottom ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .site-footer__bottom a {
+    text-decoration: none;
+  }
+
+  .site-footer__bottom a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  @media (min-width: 640px) {
+    .site-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer__grid {
+      grid-template-columns: 1.4fr 1fr 1.2fr 1.2fr;
+    }
+  }
+</style>

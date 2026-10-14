@@ -1,0 +1,71 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/montserrat';
+import '../styles/global.css';
+
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import FloatingWhatsApp from '../components/layout/FloatingWhatsApp.astro';
+import { siteConfig } from '../config/site';
+import { buildLocalBusinessSchema } from '../lib/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ruta de la imagen para redes sociales (dentro de /public o URL absoluta). */
+  ogImage?: string;
+  /** Datos estructurados adicionales para esta página. */
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, ogImage = '/og-madeartex.jpg', schema = [], noindex = false } = Astro.props;
+
+const fullTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
+const site = Astro.site;
+const canonical = site ? new URL(Astro.url.pathname, site).href : undefined;
+const ogImageUrl = site ? new URL(ogImage, site).href : ogImage;
+const structuredData = [buildLocalBusinessSchema(site), ...schema];
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#2f7a22" />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <meta name="geo.region" content="CO-NAR" />
+    <meta name="geo.placename" content={siteConfig.location.city} />
+
+    {structuredData.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <FloatingWhatsApp />
+  </body>
+</html>

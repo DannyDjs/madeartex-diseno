@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import CategoryGrid from '../components/catalog/CategoryGrid.astro';
+import ProductCard from '../components/catalog/ProductCard.astro';
+import CustomFurniture from '../components/home/CustomFurniture.astro';
+import QuoteProcess from '../components/home/QuoteProcess.astro';
+import Gallery from '../components/home/Gallery.astro';
+import About from '../components/home/About.astro';
+import ContactSection from '../components/home/ContactSection.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import ReferenceNote from '../components/ui/ReferenceNote.astro';
+import Icon from '../components/ui/Icon.astro';
+import { getFeaturedProducts } from '../data/products';
+
+const featured = getFeaturedProducts().slice(0, 6);
+---
+
+<BaseLayout
+  title="Madeartex Diseño | Muebles personalizados en Pasto, Nariño"
+  description="Diseño, fabricación y personalización de muebles en Pasto: clósets a medida, cocinas, comedores, escritorios, gabinetes y más. Solicita tu cotización con Madeartex Diseño."
+>
+  <Hero />
+
+  <section class="section" id="catalogo" aria-labelledby="categories-title">
+    <div class="container">
+      <SectionHeading eyebrow="Catálogo" title="Muebles para cada espacio de tu hogar" id="categories-title">
+        Diseñamos y fabricamos mobiliario a medida para dormitorios, cocinas, comedores, estudios y mucho más.
+      </SectionHeading>
+      <CategoryGrid />
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="featured-title">
+    <div class="container">
+      <div class="featured__head">
+        <SectionHeading eyebrow="Destacados" title="Ideas para empezar tu proyecto" id="featured-title">
+          Cada mueble se cotiza según su diseño, medidas y acabados.
+        </SectionHeading>
+        <a href="/catalogo/" class="btn btn--outline">
+          Ver catálogo completo <Icon name="arrow-right" />
+        </a>
+      </div>
+      <ul class="featured__grid">
+        {featured.map((product) => <li><ProductCard product={product} /></li>)}
+      </ul>
+      <ReferenceNote />
+    </div>
+  </section>
+
+  <CustomFurniture />
+  <QuoteProcess />
+  <Gallery />
+  <About />
+  <ContactSection />
+</BaseLayout>
+
+<style>
+  .featured__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-7);
+  }
+
+  .featured__head :global(.section-heading) {
+    margin-bottom: 0;
+  }
+
+  .featured__grid {
+    list-style: none;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .featured__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .featured__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

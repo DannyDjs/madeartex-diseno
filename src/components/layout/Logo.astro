@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-madeartex.png';
+import { siteConfig } from '../../config/site';
+
+interface Props {
+  height?: number;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const { height = 56, class: className, loading = 'eager' } = Astro.props;
+const width = Math.round((logo.width / logo.height) * height);
+---
+
+<!--
+  Versión provisional generada desde el escaneo del logotipo original
+  (src/assets/brand/original/). Reemplazar por el archivo oficial en alta resolución.
+-->
+<Image
+  src={logo}
+  alt={`${siteConfig.name} — ${siteConfig.slogan}`}
+  width={width}
+  height={height}
+  densities={[1, 2, 3]}
+  format="webp"
+  loading={loading}
+  class:list={['logo', className]}
+/>

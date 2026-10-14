@@ -1,0 +1,95 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+
+// Flujo comercial propuesto; ajustable a la operación real del negocio.
+const steps = [
+  { title: 'Identifica lo que necesitas', text: 'Explora el catálogo y elige el tipo de mueble o espacio que quieres transformar.' },
+  { title: 'Describe tu idea', text: 'Comparte las medidas disponibles, el estilo que te gusta y cómo usarás el mueble.' },
+  { title: 'Contáctanos', text: 'Envíanos tu solicitud y conversemos sobre los detalles de tu proyecto.' },
+  { title: 'Preparamos tu cotización', text: 'Revisamos tus requerimientos y te presentamos una propuesta.' },
+  { title: 'Acordamos el proyecto', text: 'Definimos juntos las condiciones para dar vida a tu mueble.' },
+];
+---
+
+<section class="section section--alt process" aria-labelledby="process-title">
+  <div class="container">
+    <SectionHeading eyebrow="Cómo cotizar" title="De tu idea a tu mueble, paso a paso" id="process-title" align="center">
+      Un proceso sencillo para que sepas qué esperar desde el primer contacto.
+    </SectionHeading>
+
+    <ol class="process__steps">
+      {
+        steps.map((step, index) => (
+          <li class="process__step">
+            <span class="process__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process__steps {
+    list-style: none;
+    display: grid;
+    gap: var(--space-4);
+    counter-reset: step;
+  }
+
+  .process__step {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--white);
+    border: 1px solid var(--color-border);
+  }
+
+  .process__number {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--wood-400);
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 640px) {
+    .process__steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .process__steps {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .process__step::after {
+      content: '';
+      position: absolute;
+      top: 2.6rem;
+      right: calc(-1 * var(--space-4));
+      width: var(--space-4);
+      height: 2px;
+      background: var(--wood-200);
+    }
+
+    .process__step:last-child::after {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/layout/PageHeader.astro';
+import { siteConfig } from '../config/site';
+
+/*
+ * Texto base informativo. Debe ser revisado y aprobado por Madeartex Diseño
+ * (idealmente con asesoría legal) antes de publicar el sitio, y completado con
+ * los datos de contacto del responsable cuando estén definidos.
+ */
+const contactLine = siteConfig.contact.email
+  ? `escribiendo a ${siteConfig.contact.email}`
+  : 'a través de los canales de contacto publicados en este sitio';
+---
+
+<BaseLayout
+  title="Aviso de privacidad"
+  description="Aviso de privacidad del sitio web de Madeartex Diseño."
+>
+  <PageHeader title="Aviso de privacidad" breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Aviso de privacidad' }]} />
+
+  <section class="section">
+    <div class="container prose">
+      <h2>Información que recopila este sitio</h2>
+      <p>
+        Este sitio web de {siteConfig.name} no cuenta con registro de usuarios ni almacena en sus servidores los datos
+        que escribes en el formulario de cotización. El formulario solo prepara el texto de un mensaje que tú decides
+        enviar, o no, a través de WhatsApp.
+      </p>
+
+      <h2>Comunicaciones por WhatsApp</h2>
+      <p>
+        Cuando eliges enviarnos un mensaje por WhatsApp, la información que compartas (por ejemplo, tu nombre, número
+        de teléfono, medidas o descripción de tu proyecto) se utilizará únicamente para atender tu consulta y preparar
+        tu cotización. El uso de WhatsApp está sujeto a las políticas de privacidad de ese servicio.
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        De acuerdo con la normativa colombiana de protección de datos personales (Ley 1581 de 2012), puedes conocer,
+        actualizar, rectificar o solicitar la supresión de tus datos personales {contactLine}.
+      </p>
+
+      <h2>Imágenes del sitio</h2>
+      <p>
+        Algunas fotografías del sitio son imágenes ilustrativas de referencia obtenidas de bancos de imágenes con
+        licencia libre. Puedes consultar sus autores en la página de <a href="/creditos/">créditos</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prose {
+    max-width: 72ch;
+  }
+
+  .prose h2 {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-xl);
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose p {
+    color: var(--charcoal-700);
+  }
+
+  .prose a {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+</style>

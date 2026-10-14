@@ -1,0 +1,140 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
+import { siteConfig } from '../../config/site';
+import { quoteHref } from '../../config/navigation';
+import { getSiteImage } from '../../data/images';
+
+const heroImage = getSiteImage('hero-sala');
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <Picture
+    src={heroImage.src}
+    alt="Sala contemporánea con pared revestida en madera, mueble flotante para televisión y repisas iluminadas"
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1280, 1600, 2000]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="hero__image"
+  />
+  <div class="hero__overlay" aria-hidden="true"></div>
+
+  <div class="container hero__content">
+    <p class="eyebrow hero__eyebrow">{siteConfig.slogan}</p>
+    <h1 id="hero-title">Diseñamos muebles que transforman tus espacios</h1>
+    <p class="hero__lead">
+      En {siteConfig.name} creamos soluciones de mobiliario que combinan diseño, funcionalidad y personalización
+      para dar vida a espacios que inspiran.
+    </p>
+    <div class="hero__actions">
+      <a href={quoteHref} class="btn">Solicitar cotización <Icon name="arrow-right" /></a>
+      <a href="/catalogo/" class="btn btn--light">Explorar catálogo</a>
+    </div>
+    <p class="hero__location">
+      <Icon name="map-pin" size={16} />
+      Muebles a medida en {siteConfig.location.city}, {siteConfig.location.region}
+    </p>
+  </div>
+
+  {heroImage.isReference && <p class="hero__ref">Imagen de referencia</p>}
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: min(88svh, 820px);
+    overflow: hidden;
+    isolation: isolate;
+    color: var(--white);
+    background: var(--charcoal-900);
+  }
+
+  .hero :global(.hero__image),
+  .hero :global(.hero__image img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(0deg, rgb(12 14 10 / 0.88) 0%, rgb(12 14 10 / 0.55) 45%, rgb(12 14 10 / 0.15) 100%);
+  }
+
+  .hero__content {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-8) clamp(3rem, 8vw, 6rem);
+    animation: hero-in 700ms var(--ease) both;
+  }
+
+  .hero__eyebrow {
+    color: var(--wood-200);
+  }
+
+  h1 {
+    max-width: 16ch;
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  .hero__lead {
+    max-width: 58ch;
+    font-size: var(--text-lg);
+    color: rgb(255 255 255 / 0.88);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .hero__location {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: rgb(255 255 255 / 0.75);
+  }
+
+  .hero__ref {
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.45);
+    font-size: 0.7rem;
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      align-items: center;
+    }
+
+    .hero__overlay {
+      background: linear-gradient(90deg, rgb(12 14 10 / 0.86) 0%, rgb(12 14 10 / 0.6) 45%, rgb(12 14 10 / 0.1) 100%);
+    }
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+</style>

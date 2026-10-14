@@ -1,0 +1,159 @@
+---
+import { Image } from 'astro:assets';
+import Icon, { type IconName } from '../ui/Icon.astro';
+import WhatsAppButton from '../ui/WhatsAppButton.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { siteConfig } from '../../config/site';
+import { quoteHref } from '../../config/navigation';
+import { getSiteImage } from '../../data/images';
+
+const options: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'ruler', title: 'Dimensiones', text: 'Muebles pensados para las medidas reales de tu espacio.' },
+  { icon: 'layout', title: 'Distribución', text: 'Organización de módulos y espacios según tu forma de usarlos.' },
+  { icon: 'drawers', title: 'Puertas y cajones', text: 'Cantidad y tipo de puertas, cajones y entrepaños.' },
+  { icon: 'archive', title: 'Diseño interior', text: 'Zonas para colgar, doblar, guardar y exhibir.' },
+  { icon: 'palette', title: 'Colores y acabados', text: 'Combinaciones que armonizan con tu decoración.' },
+  { icon: 'sparkle', title: 'Estilo', text: 'Desde líneas minimalistas hasta propuestas más cálidas.' },
+];
+
+const image = getSiteImage('closet-blanco');
+---
+
+<section class="section custom" id="servicios" aria-labelledby="custom-title">
+  <div class="container custom__grid">
+    <div class="custom__intro">
+      <SectionHeading eyebrow="Muebles personalizados" title="Un mueble pensado para tu espacio" id="custom-title">
+        Cada espacio tiene sus propias necesidades. Cuéntanos tu idea y conversemos sobre una solución de mobiliario
+        adaptada a tu proyecto.
+      </SectionHeading>
+
+      <ul class="custom__options">
+        {
+          options.map((option) => (
+            <li>
+              <span class="custom__icon">
+                <Icon name={option.icon} size={22} />
+              </span>
+              <div>
+                <h3>{option.title}</h3>
+                <p>{option.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="custom__disclaimer">
+        Las opciones disponibles para cada proyecto se confirman durante la cotización.
+      </p>
+
+      <div class="custom__actions">
+        <WhatsAppButton message={siteConfig.whatsappMessages.custom} label="Cuéntanos tu proyecto" />
+        <a href={quoteHref} class="btn btn--outline">Usar el formulario</a>
+      </div>
+    </div>
+
+    <figure class="custom__media">
+      <Image
+        src={image.src}
+        alt="Dormitorio con clóset blanco de piso a techo y nicho de repisas en madera"
+        widths={[480, 720, 960]}
+        sizes="(min-width: 1024px) 480px, 100vw"
+        loading="lazy"
+      />
+      {image.isReference && <figcaption>Imagen de referencia</figcaption>}
+    </figure>
+  </div>
+</section>
+
+<style>
+  .custom__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  .custom__options {
+    list-style: none;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .custom__options li {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .custom__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    background: var(--wood-100);
+    color: var(--wood-600);
+  }
+
+  h3 {
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .custom__options p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .custom__disclaimer {
+    margin-top: var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .custom__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .custom__media {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .custom__media :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .custom__media figcaption {
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.5);
+    color: var(--white);
+    font-size: 0.7rem;
+  }
+
+  @media (min-width: 640px) {
+    .custom__options {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .custom__grid {
+      grid-template-columns: 1.25fr 1fr;
+      gap: var(--space-8);
+    }
+  }
+</style>

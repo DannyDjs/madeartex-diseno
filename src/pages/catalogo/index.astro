@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/layout/PageHeader.astro';
+import CatalogBrowser from '../../components/catalog/CatalogBrowser.astro';
+import ReferenceNote from '../../components/ui/ReferenceNote.astro';
+import CtaBand from '../../components/catalog/CtaBand.astro';
+import { PRICE_NOTE } from '../../config/site';
+---
+
+<BaseLayout
+  title="Catálogo de muebles a medida en Pasto"
+  description="Explora el catálogo de Madeartex Diseño: dormitorios, cocinas, comedores, oficinas, salas, puertas, baños, almacenamiento y proyectos personalizados en Pasto, Nariño."
+>
+  <PageHeader
+    eyebrow="Catálogo"
+    title="Catálogo de muebles"
+    breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Catálogo' }]}
+  >
+    Filtra por categoría y descubre opciones de mobiliario para cada espacio. {PRICE_NOTE}.
+  </PageHeader>
+
+  <section class="section catalog-page" aria-label="Productos">
+    <div class="container">
+      <CatalogBrowser />
+      <ReferenceNote />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .catalog-page {
+    padding-top: var(--space-6);
+  }
+</style>

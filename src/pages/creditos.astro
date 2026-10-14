@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/layout/PageHeader.astro';
+import { getReferenceCredits } from '../data/images';
+
+const credits = getReferenceCredits();
+---
+
+<BaseLayout
+  title="Créditos de imágenes"
+  description="Créditos de las fotografías ilustrativas utilizadas en el sitio web de Madeartex Diseño."
+  noindex
+>
+  <PageHeader title="Créditos de imágenes" breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Créditos de imágenes' }]}>
+    Las siguientes fotografías se utilizan como imágenes ilustrativas de referencia y no corresponden a trabajos
+    realizados por Madeartex Diseño. Se publican bajo la licencia de Unsplash.
+  </PageHeader>
+
+  <section class="section">
+    <div class="container">
+      {
+        credits.length === 0 ? (
+          <p>Actualmente el sitio no utiliza imágenes de referencia.</p>
+        ) : (
+          <ul class="credits">
+            {credits.map((image) => (
+              <li>
+                <Image src={image.src} alt="" width={240} height={160} densities={[1, 2]} loading="lazy" />
+                <p>
+                  Foto de <a href={image.credit?.profileUrl} rel="noopener noreferrer" target="_blank">{image.credit?.author}</a>{' '}
+                  en <a href={image.credit?.photoUrl} rel="noopener noreferrer" target="_blank">Unsplash</a>
+                </p>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .credits {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: var(--space-5);
+  }
+
+  .credits :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+
+  .credits p {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .credits a {
+    color: var(--charcoal-800);
+    font-weight: 600;
+  }
+</style>

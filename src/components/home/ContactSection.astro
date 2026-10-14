@@ -1,0 +1,341 @@
+---
+import Icon from '../ui/Icon.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import WhatsAppButton from '../ui/WhatsAppButton.astro';
+import { siteConfig } from '../../config/site';
+import { categories } from '../../data/categories';
+import { products } from '../../data/products';
+import { normalizeColombianNumber } from '../../lib/whatsapp';
+
+const { contact, social, location } = siteConfig;
+const whatsappNumber = normalizeColombianNumber(contact.whatsapp);
+
+const channels = [
+  contact.phone && { icon: 'phone', label: 'Teléfono', value: contact.phone, href: `tel:${contact.phone.replace(/[^\d+]/g, '')}` },
+  contact.email && { icon: 'mail', label: 'Correo electrónico', value: contact.email, href: `mailto:${contact.email}` },
+  contact.address && { icon: 'map-pin', label: 'Dirección', value: contact.address },
+  contact.hours && { icon: 'clock', label: 'Horario de atención', value: contact.hours },
+].filter(Boolean) as { icon: 'phone' | 'mail' | 'map-pin' | 'clock'; label: string; value: string; href?: string }[];
+---
+
+<section class="section contact" id="contacto" aria-labelledby="contact-title">
+  <div class="container contact__grid">
+    <div class="contact__info">
+      <SectionHeading eyebrow="Contacto" title="Hablemos de tu proyecto" id="contact-title">
+        Escríbenos para resolver tus dudas o solicitar una cotización. Estamos en {location.city}, {location.region}.
+      </SectionHeading>
+
+      <div class="contact__card">
+        <div class="contact__card-head">
+          <span class="contact__card-icon"><Icon name="whatsapp" size={26} /></span>
+          <div>
+            <h3>WhatsApp</h3>
+            <p>Nuestro canal principal de atención comercial.</p>
+          </div>
+        </div>
+        <WhatsAppButton message={siteConfig.whatsappMessages.general} label="Iniciar conversación" block />
+      </div>
+
+      {
+        channels.length > 0 && (
+          <ul class="contact__channels">
+            {channels.map((channel) => (
+              <li>
+                <Icon name={channel.icon} size={20} />
+                <div>
+                  <span class="contact__channel-label">{channel.label}</span>
+                  {channel.href ? <a href={channel.href}>{channel.value}</a> : <span>{channel.value}</span>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      {
+        social.length > 0 && (
+          <ul class="contact__social">
+            {social.map((item) => (
+              <li>
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  <Icon name={item.icon} size={18} /> {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <div class="quote" id="cotizar">
+      <h3 class="quote__title">Solicitar cotización</h3>
+      <p class="quote__lead">
+        Completa los datos y prepararemos un mensaje de WhatsApp con tu solicitud. Tú decides cuándo enviarlo.
+      </p>
+
+      <form class="quote__form" data-quote-form data-whatsapp={whatsappNumber ?? ''} novalidate>
+        <div class="field">
+          <label for="quote-name">Nombre</label>
+          <input id="quote-name" name="nombre" type="text" autocomplete="name" required />
+        </div>
+
+        <div class="field">
+          <label for="quote-product">¿Qué mueble te interesa?</label>
+          <select id="quote-product" name="producto" required>
+            <option value="">Selecciona una opción</option>
+            {
+              categories.map((category) => (
+                <optgroup label={category.name}>
+                  {products
+                    .filter((product) => product.category === category.slug)
+                    .map((product) => (
+                      <option value={product.slug} data-name={product.name}>
+                        {product.name}
+                      </option>
+                    ))}
+                </optgroup>
+              ))
+            }
+            <option value="otro" data-name="Otro mueble o proyecto">Otro mueble o proyecto</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="quote-measures">Medidas aproximadas <span class="optional">(opcional)</span></label>
+          <input id="quote-measures" name="medidas" type="text" aria-describedby="quote-measures-hint" />
+          <span class="hint" id="quote-measures-hint">Por ejemplo: pared de 2,40 m de ancho por 2,50 m de alto.</span>
+        </div>
+
+        <div class="field">
+          <label for="quote-message">Cuéntanos tu idea</label>
+          <textarea id="quote-message" name="mensaje" rows="4" required></textarea>
+        </div>
+
+        <p class="quote__error" role="alert" data-quote-error hidden>
+          Completa tu nombre, el mueble que te interesa y una breve descripción de tu idea.
+        </p>
+
+        {
+          whatsappNumber ? (
+            <button type="submit" class="btn btn--block">
+              <Icon name="whatsapp" /> Preparar mensaje de WhatsApp
+            </button>
+          ) : (
+            <div class="quote__pending">
+              <button type="submit" class="btn btn--block" disabled aria-describedby="quote-pending-note">
+                <Icon name="whatsapp" /> Preparar mensaje de WhatsApp
+              </button>
+              <p id="quote-pending-note">
+                <Icon name="info" size={16} />
+                El canal de WhatsApp está pendiente de configuración. Pronto podrás enviarnos tu solicitud desde aquí.
+              </p>
+            </div>
+          )
+        }
+        <p class="quote__privacy">
+          Este formulario no almacena tus datos: solo prepara el texto del mensaje en WhatsApp.{' '}
+          <a href="/privacidad/">Aviso de privacidad</a>.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { buildWhatsAppLink } from '../../lib/whatsapp';
+
+  const form = document.querySelector<HTMLFormElement>('[data-quote-form]');
+
+  if (form) {
+    const select = form.querySelector<HTMLSelectElement>('select[name="producto"]');
+    const error = form.querySelector<HTMLElement>('[data-quote-error]');
+
+    // Preselecciona el producto cuando se llega desde una tarjeta (?producto=slug#cotizar).
+    const requested = new URL(window.location.href).searchParams.get('producto');
+    if (select && requested && Array.from(select.options).some((o) => o.value === requested)) {
+      select.value = requested;
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const name = String(data.get('nombre') ?? '').trim();
+      const message = String(data.get('mensaje') ?? '').trim();
+      const measures = String(data.get('medidas') ?? '').trim();
+      const productName = select?.selectedOptions[0]?.dataset.name ?? '';
+
+      if (!name || !productName || !message) {
+        if (error) error.hidden = false;
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      if (error) error.hidden = true;
+
+      const lines = [
+        `Hola, Madeartex Diseño. Mi nombre es ${name} y quisiera solicitar una cotización.`,
+        `Mueble de interés: ${productName}.`,
+        measures && `Medidas aproximadas: ${measures}.`,
+        `Mi idea: ${message}`,
+      ].filter(Boolean);
+
+      const link = buildWhatsAppLink(lines.join('\n'), form.dataset.whatsapp);
+      if (link) window.open(link, '_blank', 'noopener');
+    });
+  }
+</script>
+
+<style>
+  .contact__grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .contact__card {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+  }
+
+  .contact__card-head {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .contact__card-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--green-600);
+    color: var(--white);
+  }
+
+  .contact__card h3 {
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .contact__card p {
+    font-size: var(--text-sm);
+    color: var(--charcoal-700);
+  }
+
+  .contact__channels {
+    list-style: none;
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  .contact__channels li {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .contact__channels :global(svg) {
+    flex: none;
+    margin-top: 2px;
+    color: var(--color-primary);
+  }
+
+  .contact__channel-label {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .contact__social {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .contact__social a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+  }
+
+  .quote {
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+
+  .quote__title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+  }
+
+  .quote__lead {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .quote__form {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+
+  .quote__error {
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    background: #fdf0ee;
+    color: #8a2516;
+    font-size: var(--text-sm);
+  }
+
+  .quote__pending {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .quote__pending p {
+    display: flex;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .quote__pending :global(svg) {
+    flex: none;
+    margin-top: 2px;
+  }
+
+  .quote__privacy {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .quote__privacy a {
+    color: var(--color-primary);
+  }
+
+  @media (min-width: 1024px) {
+    .contact__grid {
+      grid-template-columns: 1fr 1.15fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+</style>

@@ -1,0 +1,401 @@
+/* ==========================================================================
+   Madeartex Diseño — tokens de diseño y estilos base
+   Los colores son aproximaciones tomadas del logotipo escaneado; reemplázalos
+   aquí cuando la empresa confirme sus códigos oficiales.
+   ========================================================================== */
+
+:root {
+  /* Verde corporativo (texto "Diseño" y techo del emblema) */
+  --green-50: #f1f7ed;
+  --green-100: #dcecd3;
+  --green-500: #3a8f2a;
+  --green-600: #2f7a22;
+  --green-700: #26641c;
+  --green-800: #1e4e16;
+  --green-900: #163a11;
+
+  /* Carbón (texto "Madeartex" y la mano del emblema) */
+  --charcoal-900: #141414;
+  --charcoal-800: #22221f;
+  --charcoal-700: #3a3a36;
+
+  /* Madera (marco interior de la casa) */
+  --wood-100: #f6eee2;
+  --wood-200: #ecdcc3;
+  --wood-400: #cda062;
+  --wood-600: #8f6431;
+
+  /* Neutros */
+  --white: #ffffff;
+  --cream: #faf8f4;
+  --gray-100: #f1efea;
+  --gray-200: #e3e0d9;
+  --gray-400: #a9a59c;
+  --gray-600: #5d5a53;
+
+  /* Roles */
+  --color-bg: var(--white);
+  --color-bg-alt: var(--cream);
+  --color-text: var(--charcoal-900);
+  --color-text-muted: var(--gray-600);
+  --color-border: var(--gray-200);
+  --color-primary: var(--green-600);
+  --color-primary-hover: var(--green-700);
+  --color-accent: var(--wood-400);
+  --color-focus: var(--green-500);
+
+  /* Tipografía */
+  --font-display: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-2xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+  --text-3xl: clamp(2rem, 1.4rem + 2.8vw, 3.5rem);
+
+  /* Espaciado y forma */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --section-y: clamp(3.5rem, 2.5rem + 5vw, 6.5rem);
+  --container: 1200px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 2px rgb(20 20 20 / 0.06);
+  --shadow: 0 6px 24px -8px rgb(20 20 20 / 0.14);
+  --shadow-lg: 0 18px 48px -16px rgb(20 20 20 / 0.25);
+  --header-h: 72px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration: 220ms;
+
+  color-scheme: light;
+}
+
+/* ---------- Reset mínimo ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Utilidades ---------- */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--alt {
+  background: var(--color-bg-alt);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: var(--charcoal-900);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: currentColor;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  --btn-bg: var(--color-primary);
+  --btn-fg: var(--white);
+  --btn-border: var(--btn-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border: 1.5px solid var(--btn-border);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease),
+    color var(--duration) var(--ease),
+    transform var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
+}
+
+.btn:hover {
+  --btn-bg: var(--color-primary-hover);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.btn svg {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
+
+.btn--outline {
+  --btn-bg: transparent;
+  --btn-fg: var(--charcoal-900);
+  --btn-border: var(--charcoal-900);
+}
+
+.btn--outline:hover {
+  --btn-bg: var(--charcoal-900);
+  --btn-fg: var(--white);
+}
+
+.btn--light {
+  --btn-bg: transparent;
+  --btn-fg: var(--white);
+  --btn-border: rgb(255 255 255 / 0.75);
+}
+
+.btn--light:hover {
+  --btn-bg: var(--white);
+  --btn-fg: var(--charcoal-900);
+  --btn-border: var(--white);
+}
+
+.btn--whatsapp {
+  --btn-bg: var(--green-600);
+}
+
+.btn--sm {
+  min-height: 42px;
+  padding: 0.55rem 1rem;
+  font-size: var(--text-xs);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn[aria-disabled='true'],
+.btn:disabled {
+  --btn-bg: var(--gray-100);
+  --btn-fg: var(--gray-600);
+  --btn-border: var(--gray-200);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ---------- Formularios ---------- */
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  transition: border-color var(--duration) var(--ease);
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--gray-400);
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 0;
+  border-color: var(--color-focus);
+}
+
+.field .hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Chips de filtro (catálogo y galería) ---------- */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--white);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color var(--duration) var(--ease),
+    background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
+}
+
+.filter-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-chip[aria-current='true'],
+.filter-chip[aria-pressed='true'] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--white);
+}

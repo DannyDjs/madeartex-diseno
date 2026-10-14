@@ -1,0 +1,39 @@
+---
+import Icon from '../ui/Icon.astro';
+import { siteConfig } from '../../config/site';
+import { buildWhatsAppLink } from '../../lib/whatsapp';
+
+// Solo se muestra cuando el número está configurado: no hay botón flotante ficticio.
+const href = buildWhatsAppLink(siteConfig.whatsappMessages.general);
+---
+
+{
+  href && (
+    <a class="floating-wa" href={href} target="_blank" rel="noopener noreferrer" aria-label="Escribir a Madeartex Diseño por WhatsApp (nueva pestaña)">
+      <Icon name="whatsapp" size={28} />
+    </a>
+  )
+}
+
+<style>
+  .floating-wa {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--green-600);
+    color: var(--white);
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  }
+
+  .floating-wa:hover {
+    background: var(--green-700);
+    transform: scale(1.06);
+  }
+</style>

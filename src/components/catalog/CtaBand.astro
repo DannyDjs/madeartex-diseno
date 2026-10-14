@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import WhatsAppButton from '../ui/WhatsAppButton.astro';
+import { siteConfig } from '../../config/site';
+import { quoteHref } from '../../config/navigation';
+import { getSiteImage } from '../../data/images';
+
+const texture = getSiteImage('madera-textura');
+---
+
+<section class="cta-band" aria-labelledby="cta-band-title">
+  <Image src={texture.src} alt="" widths={[800, 1600]} sizes="100vw" loading="lazy" class="cta-band__bg" />
+  <div class="container cta-band__inner">
+    <div>
+      <h2 id="cta-band-title">¿No encuentras exactamente lo que buscas?</h2>
+      <p>Cuéntanos tu idea. Diseñamos muebles personalizados según tus medidas y tu estilo.</p>
+    </div>
+    <div class="cta-band__actions">
+      <a href={quoteHref} class="btn">Solicitar cotización</a>
+      <WhatsAppButton message={siteConfig.whatsappMessages.custom} label="Cuéntanos tu proyecto" variant="light" hideWhenUnavailable />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    color: var(--white);
+    background: var(--green-900);
+  }
+
+  .cta-band :global(.cta-band__bg) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  .cta-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(100deg, rgb(22 58 17 / 0.95) 0%, rgb(22 58 17 / 0.85) 50%, rgb(22 58 17 / 0.6) 100%);
+  }
+
+  .cta-band__inner {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-8);
+  }
+
+  h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+  }
+
+  p {
+    margin-top: var(--space-3);
+    max-width: 55ch;
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .cta-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 1024px) {
+    .cta-band__inner {
+      grid-template-columns: 1.4fr auto;
+      align-items: center;
+    }
+  }
+</style>

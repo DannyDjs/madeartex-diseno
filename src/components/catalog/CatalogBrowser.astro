@@ -1,0 +1,140 @@
+---
+import ProductCard from './ProductCard.astro';
+import { categories } from '../../data/categories';
+import { products } from '../../data/products';
+---
+
+<div class="catalog" data-catalog>
+  <nav class="catalog__filters" aria-label="Filtrar por categoría">
+    <ul>
+      <li>
+        <a href="/catalogo/" class="filter-chip" data-filter="todos" aria-current="true">Todos</a>
+      </li>
+      {
+        categories.map((category) => (
+          <li>
+            <a href={`/catalogo/${category.slug}/`} class="filter-chip" data-filter={category.slug}>
+              {category.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <p class="catalog__status" role="status" aria-live="polite" data-catalog-status>
+    Mostrando {products.length} productos
+  </p>
+
+  <ul class="catalog__grid">
+    {
+      products.map((product) => (
+        <li data-category={product.category}>
+          <ProductCard product={product} headingLevel="h2" />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-catalog]');
+
+  if (root) {
+    const chips = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-filter]'));
+    const items = Array.from(root.querySelectorAll<HTMLElement>('.catalog__grid > li'));
+    const status = root.querySelector<HTMLElement>('[data-catalog-status]');
+
+    const applyFilter = (filter: string, updateUrl: boolean) => {
+      let visible = 0;
+      for (const item of items) {
+        const show = filter === 'todos' || item.dataset.category === filter;
+        item.hidden = !show;
+        if (show) visible++;
+      }
+      for (const chip of chips) {
+        if (chip.dataset.filter === filter) chip.setAttribute('aria-current', 'true');
+        else chip.removeAttribute('aria-current');
+      }
+      const chip = chips.find((c) => c.dataset.filter === filter);
+      if (status) {
+        const label = filter === 'todos' ? '' : ` en ${chip?.textContent?.trim()}`;
+        status.textContent = `Mostrando ${visible} ${visible === 1 ? 'producto' : 'productos'}${label}`;
+      }
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        if (filter === 'todos') url.searchParams.delete('categoria');
+        else url.searchParams.set('categoria', filter);
+        history.replaceState(null, '', url);
+      }
+    };
+
+    // Mejora progresiva: sin JavaScript, los filtros llevan a la página de cada categoría.
+    for (const chip of chips) {
+      chip.addEventListener('click', (event) => {
+        event.preventDefault();
+        applyFilter(chip.dataset.filter ?? 'todos', true);
+      });
+    }
+
+    const initial = new URL(window.location.href).searchParams.get('categoria');
+    if (initial && chips.some((c) => c.dataset.filter === initial)) applyFilter(initial, false);
+  }
+</script>
+
+<style>
+  .catalog__filters {
+    margin-bottom: var(--space-4);
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .catalog__filters ul {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    width: max-content;
+    padding-block: var(--space-1) var(--space-3);
+  }
+
+  .catalog__status {
+    margin-bottom: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .catalog__grid {
+    list-style: none;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .catalog__grid > li[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .catalog__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .catalog__filters {
+      margin-inline: 0;
+      padding-inline: 0;
+      overflow: visible;
+    }
+
+    .catalog__filters ul {
+      flex-wrap: wrap;
+      width: auto;
+    }
+
+    .catalog__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

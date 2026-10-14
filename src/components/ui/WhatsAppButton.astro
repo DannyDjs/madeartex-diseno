@@ -1,0 +1,79 @@
+---
+import Icon from './Icon.astro';
+import { buildWhatsAppLink } from '../../lib/whatsapp';
+
+interface Props {
+  message: string;
+  label?: string;
+  variant?: 'primary' | 'outline' | 'light';
+  size?: 'sm' | 'md';
+  block?: boolean;
+  /** Muestra el aviso de canal pendiente bajo el botón cuando no hay número. */
+  showPendingNote?: boolean;
+  /** No renderiza nada si el número no está configurado. */
+  hideWhenUnavailable?: boolean;
+}
+
+const {
+  message,
+  label = 'Escribir por WhatsApp',
+  variant = 'primary',
+  size = 'md',
+  block = false,
+  showPendingNote = true,
+  hideWhenUnavailable = false,
+} = Astro.props;
+
+const href = buildWhatsAppLink(message);
+const classes = [
+  'btn',
+  variant === 'primary' ? 'btn--whatsapp' : `btn--${variant}`,
+  size === 'sm' && 'btn--sm',
+  block && 'btn--block',
+];
+const noteId = `wa-pending-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+{
+  href ? (
+    <a class:list={classes} href={href} target="_blank" rel="noopener noreferrer">
+      <Icon name="whatsapp" />
+      <span>{label}</span>
+      <span class="visually-hidden">(abre WhatsApp en una nueva pestaña)</span>
+    </a>
+  ) : hideWhenUnavailable ? null : (
+    <div class:list={['wa-pending', block && 'wa-pending--block']}>
+      <button type="button" class:list={classes} disabled aria-describedby={showPendingNote ? noteId : undefined}>
+        <Icon name="whatsapp" />
+        <span>{label}</span>
+      </button>
+      {showPendingNote && (
+        <p class="wa-pending__note" id={noteId}>
+          <Icon name="info" size={14} />
+          Canal de WhatsApp pendiente de configuración.
+        </p>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .wa-pending {
+    display: inline-grid;
+    gap: var(--space-2);
+    justify-items: start;
+  }
+
+  .wa-pending--block {
+    display: grid;
+    justify-items: stretch;
+  }
+
+  .wa-pending__note {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>

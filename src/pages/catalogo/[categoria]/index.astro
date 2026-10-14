@@ -1,0 +1,98 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/layout/PageHeader.astro';
+import ProductCard from '../../../components/catalog/ProductCard.astro';
+import CtaBand from '../../../components/catalog/CtaBand.astro';
+import ReferenceNote from '../../../components/ui/ReferenceNote.astro';
+import { categories, type Category } from '../../../data/categories';
+import { getProductsByCategory } from '../../../data/products';
+import { buildBreadcrumbSchema } from '../../../lib/seo';
+
+export const getStaticPaths = (() =>
+  categories.map((category) => ({ params: { categoria: category.slug }, props: { category } }))) satisfies GetStaticPaths;
+
+interface Props {
+  category: Category;
+}
+
+const { category } = Astro.props;
+const items = getProductsByCategory(category.slug);
+const otherCategories = categories.filter((c) => c.slug !== category.slug);
+const breadcrumb = buildBreadcrumbSchema(
+  [
+    { name: 'Inicio', path: '/' },
+    { name: 'Catálogo', path: '/catalogo/' },
+    { name: category.name, path: `/catalogo/${category.slug}/` },
+  ],
+  Astro.site,
+);
+---
+
+<BaseLayout title={category.seo.title} description={category.seo.description} schema={breadcrumb ? [breadcrumb] : []}>
+  <PageHeader
+    eyebrow="Catálogo"
+    title={category.name}
+    breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Catálogo', href: '/catalogo/' }, { label: category.name }]}
+  >
+    {category.description}
+  </PageHeader>
+
+  <section class="section category-page" aria-label={`Productos de ${category.name}`}>
+    <div class="container">
+      <ul class="category-page__grid">
+        {items.map((product) => <li><ProductCard product={product} headingLevel="h2" /></li>)}
+      </ul>
+      <ReferenceNote />
+
+      <nav class="category-page__others" aria-labelledby="other-categories">
+        <h2 id="other-categories">Otras categorías</h2>
+        <ul>
+          {otherCategories.map((c) => <li><a href={`/catalogo/${c.slug}/`} class="filter-chip">{c.name}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .category-page {
+    padding-top: var(--space-7);
+  }
+
+  .category-page__grid {
+    list-style: none;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .category-page__others {
+    margin-top: var(--space-8);
+  }
+
+  .category-page__others h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-xl);
+  }
+
+  .category-page__others ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 640px) {
+    .category-page__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .category-page__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
