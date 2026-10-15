@@ -24,6 +24,21 @@ backend, base de datos ni sistema de usuarios.
 Para publicar, sube el contenido de `dist/` a cualquier hosting estático (Netlify, Vercel, Cloudflare Pages,
 hosting compartido, etc.).
 
+## Despliegue en GitHub Pages
+
+El flujo [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) compila y publica el sitio en cada push a
+`main`, en `https://<usuario>.github.io/<repositorio>/`.
+
+1. En el repositorio: **Settings → Pages → Build and deployment → Source = GitHub Actions**.
+2. Haz push a `main` (o ejecuta el flujo manualmente desde la pestaña **Actions**).
+
+El sitio vive en una subcarpeta, por eso todos los enlaces internos pasan por `withBase()`
+([`src/lib/paths.ts`](src/lib/paths.ts)); no escribas enlaces internos como `"/ruta/"` directamente.
+Con un dominio propio, cambia en el flujo `SITE_URL` por el dominio y `BASE_PATH` por `/`.
+
+> GitHub Pages con repositorio **privado** requiere un plan de pago (GitHub Pro, Team o Enterprise). Con el plan
+> gratuito, el repositorio debe ser público. En cualquier caso, la página publicada es pública.
+
 ## Configuración pendiente (importante)
 
 Todos los datos de la empresa se editan en **un solo archivo**: [`src/config/site.ts`](src/config/site.ts).

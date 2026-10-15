@@ -5,7 +5,8 @@ import PageHeader from '../../../components/layout/PageHeader.astro';
 import ProductCard from '../../../components/catalog/ProductCard.astro';
 import CtaBand from '../../../components/catalog/CtaBand.astro';
 import ReferenceNote from '../../../components/ui/ReferenceNote.astro';
-import { categories, type Category } from '../../../data/categories';
+import { categories, categoryUrl, type Category } from '../../../data/categories';
+import { withBase } from '../../../lib/paths';
 import { getProductsByCategory } from '../../../data/products';
 import { buildBreadcrumbSchema } from '../../../lib/seo';
 
@@ -21,9 +22,9 @@ const items = getProductsByCategory(category.slug);
 const otherCategories = categories.filter((c) => c.slug !== category.slug);
 const breadcrumb = buildBreadcrumbSchema(
   [
-    { name: 'Inicio', path: '/' },
-    { name: 'Catálogo', path: '/catalogo/' },
-    { name: category.name, path: `/catalogo/${category.slug}/` },
+    { name: 'Inicio', path: withBase('/') },
+    { name: 'Catálogo', path: withBase('/catalogo/') },
+    { name: category.name, path: categoryUrl(category.slug) },
   ],
   Astro.site,
 );
@@ -33,7 +34,7 @@ const breadcrumb = buildBreadcrumbSchema(
   <PageHeader
     eyebrow="Catálogo"
     title={category.name}
-    breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Catálogo', href: '/catalogo/' }, { label: category.name }]}
+    breadcrumbs={[{ label: 'Inicio', href: withBase('/') }, { label: 'Catálogo', href: withBase('/catalogo/') }, { label: category.name }]}
   >
     {category.description}
   </PageHeader>
@@ -48,7 +49,7 @@ const breadcrumb = buildBreadcrumbSchema(
       <nav class="category-page__others" aria-labelledby="other-categories">
         <h2 id="other-categories">Otras categorías</h2>
         <ul>
-          {otherCategories.map((c) => <li><a href={`/catalogo/${c.slug}/`} class="filter-chip">{c.name}</a></li>)}
+          {otherCategories.map((c) => <li><a href={categoryUrl(c.slug)} class="filter-chip">{c.name}</a></li>)}
         </ul>
       </nav>
     </div>

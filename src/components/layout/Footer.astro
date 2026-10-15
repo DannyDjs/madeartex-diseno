@@ -3,7 +3,8 @@ import Logo from './Logo.astro';
 import Icon from '../ui/Icon.astro';
 import { siteConfig } from '../../config/site';
 import { mainNav, quoteHref } from '../../config/navigation';
-import { categories } from '../../data/categories';
+import { categories, categoryUrl } from '../../data/categories';
+import { withBase } from '../../lib/paths';
 import { buildWhatsAppLink } from '../../lib/whatsapp';
 
 const { contact, social, location } = siteConfig;
@@ -14,7 +15,7 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container site-footer__grid">
     <div class="site-footer__brand">
-      <a href="/" aria-label="Madeartex Diseño, ir al inicio">
+      <a href={withBase('/')} aria-label="Madeartex Diseño, ir al inicio">
         <Logo height={72} loading="lazy" />
       </a>
       <p class="site-footer__slogan">{siteConfig.slogan}.</p>
@@ -35,7 +36,7 @@ const year = new Date().getFullYear();
     <nav aria-labelledby="footer-catalog-title">
       <h2 class="site-footer__title" id="footer-catalog-title">Catálogo</h2>
       <ul class="site-footer__list">
-        {categories.map((category) => <li><a href={`/catalogo/${category.slug}/`}>{category.name}</a></li>)}
+        {categories.map((category) => <li><a href={categoryUrl(category.slug)}>{category.name}</a></li>)}
       </ul>
     </nav>
 
@@ -80,8 +81,8 @@ const year = new Date().getFullYear();
     <div class="container site-footer__bottom-inner">
       <p>© <span data-current-year>{year}</span> {siteConfig.name}. Todos los derechos reservados.</p>
       <ul>
-        <li><a href="/privacidad/">Aviso de privacidad</a></li>
-        <li><a href="/creditos/">Créditos de imágenes</a></li>
+        <li><a href={withBase('/privacidad/')}>Aviso de privacidad</a></li>
+        <li><a href={withBase('/creditos/')}>Créditos de imágenes</a></li>
       </ul>
     </div>
   </div>

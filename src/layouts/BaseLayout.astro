@@ -8,22 +8,23 @@ import Footer from '../components/layout/Footer.astro';
 import FloatingWhatsApp from '../components/layout/FloatingWhatsApp.astro';
 import { siteConfig } from '../config/site';
 import { buildLocalBusinessSchema } from '../lib/seo';
+import { withBase } from '../lib/paths';
 
 interface Props {
   title: string;
   description: string;
-  /** Ruta de la imagen para redes sociales (dentro de /public o URL absoluta). */
+  /** Ruta de la imagen para redes sociales, ya prefijada con la base del sitio. */
   ogImage?: string;
   /** Datos estructurados adicionales para esta página. */
   schema?: Record<string, unknown>[];
   noindex?: boolean;
 }
 
-const { title, description, ogImage = '/og-madeartex.jpg', schema = [], noindex = false } = Astro.props;
+const { title, description, ogImage = withBase('/og-madeartex.jpg'), schema = [], noindex = false } = Astro.props;
 
 const fullTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
 const site = Astro.site;
-const canonical = site ? new URL(Astro.url.pathname, site).href : undefined;
+const canonical = site && !noindex ? new URL(Astro.url.pathname, site).href : undefined;
 const ogImageUrl = site ? new URL(ogImage, site).href : ogImage;
 const structuredData = [buildLocalBusinessSchema(site), ...schema];
 ---
@@ -39,8 +40,8 @@ const structuredData = [buildLocalBusinessSchema(site), ...schema];
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#2f7a22" />
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href={withBase('/favicon.png')} />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />

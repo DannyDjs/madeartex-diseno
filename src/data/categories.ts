@@ -1,3 +1,5 @@
+import { withBase } from '../lib/paths';
+
 export const CATEGORY_SLUGS = [
   'dormitorios',
   'cocinas',
@@ -135,6 +137,8 @@ export const categories: Category[] = [
     },
   },
 ];
+
+export const categoryUrl = (slug: CategorySlug) => withBase(`/catalogo/${slug}/`);
 
 export function getCategory(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);

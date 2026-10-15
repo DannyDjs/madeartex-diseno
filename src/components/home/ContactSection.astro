@@ -6,6 +6,7 @@ import { siteConfig } from '../../config/site';
 import { categories } from '../../data/categories';
 import { products } from '../../data/products';
 import { normalizeColombianNumber } from '../../lib/whatsapp';
+import { withBase } from '../../lib/paths';
 
 const { contact, social, location } = siteConfig;
 const whatsappNumber = normalizeColombianNumber(contact.whatsapp);
@@ -134,7 +135,7 @@ const channels = [
         }
         <p class="quote__privacy">
           Este formulario no almacena tus datos: solo prepara el texto del mensaje en WhatsApp.{' '}
-          <a href="/privacidad/">Aviso de privacidad</a>.
+          <a href={withBase('/privacidad/')}>Aviso de privacidad</a>.
         </p>
       </form>
     </div>

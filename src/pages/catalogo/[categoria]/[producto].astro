@@ -10,7 +10,8 @@ import ReferenceNote from '../../../components/ui/ReferenceNote.astro';
 import Icon from '../../../components/ui/Icon.astro';
 import { PRICE_NOTE } from '../../../config/site';
 import { quoteHrefFor } from '../../../config/navigation';
-import { getCategory } from '../../../data/categories';
+import { getCategory, categoryUrl as buildCategoryUrl } from '../../../data/categories';
+import { withBase } from '../../../lib/paths';
 import { getSiteImage } from '../../../data/images';
 import { products, getRelatedProducts, type Product } from '../../../data/products';
 import { productMessage } from '../../../lib/whatsapp';
@@ -31,14 +32,14 @@ const category = getCategory(product.category)!;
 const images = product.images.map(getSiteImage);
 const related = getRelatedProducts(product);
 const ogImage = await getImage({ src: images[0]!.src, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
-const categoryUrl = `/catalogo/${category.slug}/`;
+const categoryUrl = buildCategoryUrl(category.slug);
 
 const schema = [
   buildProductSchema(product, category.name, ogImage.src, Astro.site),
   buildBreadcrumbSchema(
     [
-      { name: 'Inicio', path: '/' },
-      { name: 'Catálogo', path: '/catalogo/' },
+      { name: 'Inicio', path: withBase('/') },
+      { name: 'Catálogo', path: withBase('/catalogo/') },
       { name: category.name, path: categoryUrl },
       { name: product.name, path: Astro.url.pathname },
     ],
@@ -57,8 +58,8 @@ const schema = [
     title={product.name}
     eyebrow={category.name}
     breadcrumbs={[
-      { label: 'Inicio', href: '/' },
-      { label: 'Catálogo', href: '/catalogo/' },
+      { label: 'Inicio', href: withBase('/') },
+      { label: 'Catálogo', href: withBase('/catalogo/') },
       { label: category.name, href: categoryUrl },
       { label: product.name },
     ]}

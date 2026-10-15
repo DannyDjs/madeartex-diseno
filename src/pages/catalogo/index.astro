@@ -5,6 +5,7 @@ import CatalogBrowser from '../../components/catalog/CatalogBrowser.astro';
 import ReferenceNote from '../../components/ui/ReferenceNote.astro';
 import CtaBand from '../../components/catalog/CtaBand.astro';
 import { PRICE_NOTE } from '../../config/site';
+import { withBase } from '../../lib/paths';
 ---
 
 <BaseLayout
@@ -14,7 +15,7 @@ import { PRICE_NOTE } from '../../config/site';
   <PageHeader
     eyebrow="Catálogo"
     title="Catálogo de muebles"
-    breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Catálogo' }]}
+    breadcrumbs={[{ label: 'Inicio', href: withBase('/') }, { label: 'Catálogo' }]}
   >
     Filtra por categoría y descubre opciones de mobiliario para cada espacio. {PRICE_NOTE}.
   </PageHeader>

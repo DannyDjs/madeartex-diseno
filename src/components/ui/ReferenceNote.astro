@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import { withBase } from '../../lib/paths';
 
 interface Props {
   class?: string;
@@ -12,7 +13,7 @@ const { class: className } = Astro.props;
   <Icon name="info" size={16} />
   <span>
     Las fotografías son imágenes ilustrativas de referencia y no corresponden a trabajos realizados por
-    Madeartex Diseño. <a href="/creditos/">Ver créditos</a>.
+    Madeartex Diseño. <a href={withBase('/creditos/')}>Ver créditos</a>.
   </span>
 </p>
 

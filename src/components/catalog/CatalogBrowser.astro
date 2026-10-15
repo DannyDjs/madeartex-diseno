@@ -1,6 +1,7 @@
 ---
 import ProductCard from './ProductCard.astro';
-import { categories } from '../../data/categories';
+import { categories, categoryUrl } from '../../data/categories';
+import { withBase } from '../../lib/paths';
 import { products } from '../../data/products';
 ---
 
@@ -8,12 +9,12 @@ import { products } from '../../data/products';
   <nav class="catalog__filters" aria-label="Filtrar por categoría">
     <ul>
       <li>
-        <a href="/catalogo/" class="filter-chip" data-filter="todos" aria-current="true">Todos</a>
+        <a href={withBase('/catalogo/')} class="filter-chip" data-filter="todos" aria-current="true">Todos</a>
       </li>
       {
         categories.map((category) => (
           <li>
-            <a href={`/catalogo/${category.slug}/`} class="filter-chip" data-filter={category.slug}>
+            <a href={categoryUrl(category.slug)} class="filter-chip" data-filter={category.slug}>
               {category.name}
             </a>
           </li>

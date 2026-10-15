@@ -1,4 +1,5 @@
 import type { CategorySlug } from './categories';
+import { withBase } from '../lib/paths';
 
 /**
  * Catálogo inicial. Los textos describen tipos de mueble de forma general y
@@ -319,4 +320,4 @@ export function getRelatedProducts(product: Product, limit = 3): Product[] {
   return [...sameCategory, ...others].slice(0, limit);
 }
 
-export const productUrl = (product: Product) => `/catalogo/${product.category}/${product.slug}/`;
+export const productUrl = (product: Product) => withBase(`/catalogo/${product.category}/${product.slug}/`);

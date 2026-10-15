@@ -1,5 +1,6 @@
 import { siteConfig } from '../config/site';
 import { normalizeColombianNumber } from './whatsapp';
+import { withBase } from './paths';
 import type { Product } from '../data/products';
 
 /**
@@ -28,9 +29,9 @@ export function buildLocalBusinessSchema(site: URL | undefined): Record<string, 
   };
 
   if (site) {
-    schema.url = site.href;
-    schema.logo = new URL('/icon-512.png', site).href;
-    schema.image = new URL('/og-madeartex.jpg', site).href;
+    schema.url = new URL(withBase('/'), site).href;
+    schema.logo = new URL(withBase('/icon-512.png'), site).href;
+    schema.image = new URL(withBase('/og-madeartex.jpg'), site).href;
   }
   if (phone) schema.telephone = `+${phone}`;
   if (contact.email) schema.email = contact.email;

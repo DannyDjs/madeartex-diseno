@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from '../ui/Icon.astro';
-import { categories } from '../../data/categories';
+import { categories, categoryUrl } from '../../data/categories';
 import { getSiteImage } from '../../data/images';
 import { getProductsByCategory } from '../../data/products';
 ---
@@ -13,7 +13,7 @@ import { getProductsByCategory } from '../../data/products';
       const count = getProductsByCategory(category.slug).length;
       return (
         <li class:list={['category-tile', index === 0 && 'category-tile--wide']}>
-          <a href={`/catalogo/${category.slug}/`} class="category-tile__link">
+          <a href={categoryUrl(category.slug)} class="category-tile__link">
             <Image
               src={image.src}
               alt=""

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/layout/PageHeader.astro';
 import { getReferenceCredits } from '../data/images';
+import { withBase } from '../lib/paths';
 
 const credits = getReferenceCredits();
 ---
@@ -12,7 +13,7 @@ const credits = getReferenceCredits();
   description="Créditos de las fotografías ilustrativas utilizadas en el sitio web de Madeartex Diseño."
   noindex
 >
-  <PageHeader title="Créditos de imágenes" breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Créditos de imágenes' }]}>
+  <PageHeader title="Créditos de imágenes" breadcrumbs={[{ label: 'Inicio', href: withBase('/') }, { label: 'Créditos de imágenes' }]}>
     Las siguientes fotografías se utilizan como imágenes ilustrativas de referencia y no corresponden a trabajos
     realizados por Madeartex Diseño. Se publican bajo la licencia de Unsplash.
   </PageHeader>

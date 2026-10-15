@@ -12,6 +12,7 @@ import SectionHeading from '../components/ui/SectionHeading.astro';
 import ReferenceNote from '../components/ui/ReferenceNote.astro';
 import Icon from '../components/ui/Icon.astro';
 import { getFeaturedProducts } from '../data/products';
+import { withBase } from '../lib/paths';
 
 const featured = getFeaturedProducts().slice(0, 6);
 ---
@@ -37,7 +38,7 @@ const featured = getFeaturedProducts().slice(0, 6);
         <SectionHeading eyebrow="Destacados" title="Ideas para empezar tu proyecto" id="featured-title">
           Cada mueble se cotiza según su diseño, medidas y acabados.
         </SectionHeading>
-        <a href="/catalogo/" class="btn btn--outline">
+        <a href={withBase('/catalogo/')} class="btn btn--outline">
           Ver catálogo completo <Icon name="arrow-right" />
         </a>
       </div>

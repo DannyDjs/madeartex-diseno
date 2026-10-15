@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/layout/PageHeader.astro';
 import { siteConfig } from '../config/site';
+import { withBase } from '../lib/paths';
 
 /*
  * Texto base informativo. Debe ser revisado y aprobado por Madeartex Diseño
@@ -17,7 +18,7 @@ const contactLine = siteConfig.contact.email
   title="Aviso de privacidad"
   description="Aviso de privacidad del sitio web de Madeartex Diseño."
 >
-  <PageHeader title="Aviso de privacidad" breadcrumbs={[{ label: 'Inicio', href: '/' }, { label: 'Aviso de privacidad' }]} />
+  <PageHeader title="Aviso de privacidad" breadcrumbs={[{ label: 'Inicio', href: withBase('/') }, { label: 'Aviso de privacidad' }]} />
 
   <section class="section">
     <div class="container prose">
@@ -44,7 +45,7 @@ const contactLine = siteConfig.contact.email
       <h2>Imágenes del sitio</h2>
       <p>
         Algunas fotografías del sitio son imágenes ilustrativas de referencia obtenidas de bancos de imágenes con
-        licencia libre. Puedes consultar sus autores en la página de <a href="/creditos/">créditos</a>.
+        licencia libre. Puedes consultar sus autores en la página de <a href={withBase('/creditos/')}>créditos</a>.
       </p>
     </div>
   </section>

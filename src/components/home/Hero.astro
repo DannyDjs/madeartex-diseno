@@ -4,6 +4,7 @@ import Icon from '../ui/Icon.astro';
 import { siteConfig } from '../../config/site';
 import { quoteHref } from '../../config/navigation';
 import { getSiteImage } from '../../data/images';
+import { withBase } from '../../lib/paths';
 
 const heroImage = getSiteImage('hero-sala');
 ---
@@ -30,7 +31,7 @@ const heroImage = getSiteImage('hero-sala');
     </p>
     <div class="hero__actions">
       <a href={quoteHref} class="btn">Solicitar cotización <Icon name="arrow-right" /></a>
-      <a href="/catalogo/" class="btn btn--light">Explorar catálogo</a>
+      <a href={withBase('/catalogo/')} class="btn btn--light">Explorar catálogo</a>
     </div>
     <p class="hero__location">
       <Icon name="map-pin" size={16} />

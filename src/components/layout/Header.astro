@@ -2,15 +2,16 @@
 import Logo from './Logo.astro';
 import Icon from '../ui/Icon.astro';
 import { mainNav, quoteHref } from '../../config/navigation';
+import { withBase } from '../../lib/paths';
 
 const currentPath = Astro.url.pathname;
 const isCurrent = (href: string) =>
-  href === '/' ? currentPath === '/' : !href.includes('#') && currentPath.startsWith(href);
+  href === withBase('/') ? currentPath === href : !href.includes('#') && currentPath.startsWith(href);
 ---
 
 <header class="site-header" data-header>
   <div class="container site-header__inner">
-    <a href="/" class="site-header__brand" aria-label="Madeartex Diseño, ir al inicio">
+    <a href={withBase('/')} class="site-header__brand" aria-label="Madeartex Diseño, ir al inicio">
       <Logo height={56} />
     </a>
 
